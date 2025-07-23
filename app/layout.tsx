@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Waxtaan",
   description: "Une nouvelle façon de discuter",
   icons: {
-    icon: '/waxtaan.png',
+    icon: "/waxtaan.png",
   },
 };
 

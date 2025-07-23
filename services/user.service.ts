@@ -3,7 +3,10 @@ import type { User } from "../types";
 const API_URL = "http://localhost:8080/api";
 
 // Gère la connexion de l'utilisateur
-export async function login(username: string, password: string): Promise<{ token: string }> {
+export async function login(
+  username: string,
+  password: string
+): Promise<{ token: string }> {
   const res = await fetch(`${API_URL}/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -12,14 +15,18 @@ export async function login(username: string, password: string): Promise<{ token
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(errorText || 'Échec de la connexion');
+    throw new Error(errorText || "Échec de la connexion");
   }
 
   return res.json();
 }
 
 // Gère l'inscription d'un nouvel utilisateur
-export async function register(username: string, password: string, avatar: File | null) {
+export async function register(
+  username: string,
+  password: string,
+  avatar: File | null
+) {
   const formData = new FormData();
   formData.append("username", username);
   formData.append("password", password);
@@ -34,7 +41,7 @@ export async function register(username: string, password: string, avatar: File 
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(errorText || 'Échec de l\'inscription');
+    throw new Error(errorText || "Échec de l'inscription");
   }
 
   return res.json();
@@ -46,7 +53,8 @@ export async function getCurrentUser(token: string): Promise<User> {
     headers: { Authorization: `Bearer ${token}` },
     credentials: "include",
   });
-  if (!res.ok) throw new Error("Impossible de récupérer l'utilisateur connecté");
+  if (!res.ok)
+    throw new Error("Impossible de récupérer l'utilisateur connecté");
   return res.json();
 }
 
@@ -60,17 +68,27 @@ export async function getUserById(id: string, token: string): Promise<User> {
 }
 
 // Recherche un utilisateur par username
-export async function getUserByUsername(username: string, token: string): Promise<User> {
-  const res = await fetch(`${API_URL}/users/by-username/${encodeURIComponent(username)}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    credentials: "include",
-  });
+export async function getUserByUsername(
+  username: string,
+  token: string
+): Promise<User> {
+  const res = await fetch(
+    `${API_URL}/users/by-username/${encodeURIComponent(username)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
+    }
+  );
   if (!res.ok) throw new Error("Aucun utilisateur trouvé avec ce nom");
   return res.json();
 }
 
 // Ajoute un contact à l'utilisateur courant
-export async function addContact(myId: string, contactId: string, token: string) {
+export async function addContact(
+  myId: string,
+  contactId: string,
+  token: string
+) {
   const res = await fetch(`${API_URL}/users/${myId}/contacts`, {
     method: "POST",
     headers: {
@@ -85,10 +103,32 @@ export async function addContact(myId: string, contactId: string, token: string)
   return text;
 }
 
+// Supprime un contact et tous les messages associés
+export async function removeContactAndMessages(
+  myId: string,
+  contactId: string,
+  token: string
+) {
+  const res = await fetch(`${API_URL}/users/${myId}/contacts/${contactId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
+  });
+  const text = await res.text();
+  if (!res.ok)
+    throw new Error(text || "Erreur lors de la suppression du contact");
+  return text;
+}
+
 // Met à jour le profil de l'utilisateur connecté
 export async function updateUserProfile(
   token: string,
-  { name, status, password, avatar }: { name: string; status: string; password?: string; avatar?: File }
+  {
+    name,
+    status,
+    password,
+    avatar,
+  }: { name: string; status: string; password?: string; avatar?: File }
 ) {
   const formData = new FormData();
   formData.append("name", name);
