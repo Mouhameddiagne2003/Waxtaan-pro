@@ -59,6 +59,15 @@ export async function getCurrentUser(token: string): Promise<User> {
   return res.json();
 }
 
+export async function getAllUsers(token: string): Promise<User[]> {
+  const res = await fetch(`${API_URL}/users`, {
+    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Impossible de récupérer les utilisateurs");
+  return res.json();
+}
+
 export async function getUserById(id: string, token: string): Promise<User> {
   const res = await fetch(`${API_URL}/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },

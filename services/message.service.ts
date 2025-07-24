@@ -72,3 +72,16 @@ export async function getMessagesForConversation(
   }
   return filtered;
 }
+
+// Récupère TOUS les messages (pour le rafraîchissement initial)
+export async function getAllMessages(token: string): Promise<Message[]> {
+  const API_URL =
+    (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080") + "/api";
+  const res = await fetch(`${API_URL}/messages`, {
+    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
+  });
+  if (!res.ok)
+    throw new Error("Erreur lors de la récupération de tous les messages");
+  return res.json();
+}
