@@ -76,10 +76,13 @@ export default function Home() {
       const me = await userService.getCurrentUser(token);
 
       // Récupère tous les messages (privés et groupes)
-      const res = await fetch("http://localhost:8080/api/messages", {
-        headers: { Authorization: `Bearer ${token}` },
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/messages`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
+        }
+      );
       if (!res.ok) return;
       const allMsgs = await res.json();
 

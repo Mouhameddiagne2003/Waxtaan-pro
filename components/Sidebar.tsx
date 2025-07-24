@@ -264,7 +264,7 @@ const Sidebar: FC<SidebarProps> = ({
                             src={
                               c.avatar && c.avatar.startsWith("http")
                                 ? c.avatar
-                                : `http://localhost:8080${c.avatar}`
+                                : `${process.env.NEXT_PUBLIC_API_BASE_URL}${c.avatar}`
                             }
                             alt={c.name}
                             className="w-10 h-10 rounded-full object-cover"
@@ -380,7 +380,7 @@ const Sidebar: FC<SidebarProps> = ({
                         conv.avatar.startsWith("http") ||
                         conv.avatar.startsWith("blob:")
                           ? conv.avatar
-                          : `http://localhost:8080${conv.avatar}`
+                          : `${process.env.NEXT_PUBLIC_API_BASE_URL}${conv.avatar}`
                       }
                       alt={conv.name}
                       className={`w-12 h-12 rounded-full object-cover ${

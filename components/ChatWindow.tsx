@@ -261,7 +261,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ conversation, onBack }) => {
                   Fichier envoyé
                 </span>
                 <a
-                  href={`http://localhost:8080${msg.file}`}
+                  href={`${process.env.NEXT_PUBLIC_API_BASE_URL}${msg.file}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#128C7E] text-xs underline"
