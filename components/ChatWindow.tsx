@@ -310,7 +310,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ conversation, onBack }) => {
         <input
           type="text"
           placeholder="Tapez un message..."
-          className="flex-1 rounded-full border border-[#e9f5ec] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#25d366] bg-[#f9fbfa]"
+          className="flex-1 rounded-full border border-[#e9f5ec] px-4 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-[#25d366] bg-[#f9fbfa]"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={sending}

@@ -5,11 +5,16 @@ interface AddContactModalProps {
   onSelectContact?: (id: string, name: string) => void;
 }
 
-const AddContactModal: FC<AddContactModalProps> = ({ onClose, onSelectContact }) => {
+const AddContactModal: FC<AddContactModalProps> = ({
+  onClose,
+  onSelectContact,
+}) => {
   const [username, setUsername] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [feedback, setFeedback] = React.useState<string | null>(null);
-  const [contacts, setContacts] = React.useState<{id: string, name: string}[]>([]);
+  const [contacts, setContacts] = React.useState<
+    { id: string; name: string }[]
+  >([]);
   const [contactsLoading, setContactsLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -25,15 +30,19 @@ const AddContactModal: FC<AddContactModalProps> = ({ onClose, onSelectContact })
         } else {
           const contactList = await Promise.all(
             me.contacts.map(async (id: string) => {
-              const cleanId = id.replace(/^"|"$/g, '').trim();
+              const cleanId = id.replace(/^"|"$/g, "").trim();
               try {
-                    return await userService.getUserById(cleanId, token);
-                } catch {
-                    return null;
-                }
+                return await userService.getUserById(cleanId, token);
+              } catch {
+                return null;
+              }
             })
           );
-          setContacts(contactList.filter(Boolean).map((c: any) => ({ id: c.id, name: c.name })));
+          setContacts(
+            contactList
+              .filter(Boolean)
+              .map((c: any) => ({ id: c.id, name: c.name }))
+          );
         }
       } catch {
         setContacts([]);
@@ -77,9 +86,9 @@ const AddContactModal: FC<AddContactModalProps> = ({ onClose, onSelectContact })
         <input
           type="text"
           placeholder="Nom du contact"
-          className="border px-2 py-1 rounded w-full mb-3"
+          className="border px-2 py-1 rounded w-full mb-3 text-black"
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
         />
         <button
@@ -89,19 +98,35 @@ const AddContactModal: FC<AddContactModalProps> = ({ onClose, onSelectContact })
         >
           {loading ? "Recherche..." : "Ajouter"}
         </button>
-        <button className="px-4 py-1 bg-gray-200 rounded" onClick={onClose} disabled={loading}>Annuler</button>
+        <button
+          className="px-4 py-1 bg-gray-200 rounded"
+          onClick={onClose}
+          disabled={loading}
+        >
+          Annuler
+        </button>
         {feedback && (
-          <div className={`mt-3 text-sm text-center ${feedback.includes('Contact ajouté') ? 'text-green-600' : 'text-red-600'}`}>{feedback}</div>
+          <div
+            className={`mt-3 text-sm text-center ${
+              feedback.includes("Contact ajouté")
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {feedback}
+          </div>
         )}
         <div className="mt-5">
-          <div className="font-semibold text-gray-700 mb-1 text-sm">Vos contacts :</div>
+          <div className="font-semibold text-gray-700 mb-1 text-sm">
+            Vos contacts :
+          </div>
           {contactsLoading ? (
             <div className="text-gray-400 text-xs">Chargement...</div>
           ) : contacts.length === 0 ? (
             <div className="text-gray-400 text-xs">Aucun contact</div>
           ) : (
             <ul className="text-xs text-gray-700 max-h-24 overflow-y-auto">
-              {contacts.map(c => (
+              {contacts.map((c) => (
                 <li
                   key={c.id}
                   className="py-0.5 border-b last:border-b-0 border-gray-100 cursor-pointer hover:bg-[#eafff3] px-2 rounded"
