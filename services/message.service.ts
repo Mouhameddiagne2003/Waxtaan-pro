@@ -16,16 +16,19 @@ export async function sendMessage(
   token: string,
   file?: File | null
 ): Promise<Message> {
-
   const formData = new FormData();
-  const messageBlob = new Blob([JSON.stringify(message)], { type: "application/json" });
-  formData.append('message', messageBlob);
+  const messageBlob = new Blob([JSON.stringify(message)], {
+    type: "application/json",
+  });
+  formData.append("message", messageBlob);
 
   if (file) {
-    formData.append('file', file);
+    formData.append("file", file);
   }
 
-  const res = await fetch("http://localhost:8080/api/messages", {
+  const API_URL =
+    (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080") + "/api";
+  const res = await fetch(`${API_URL}/messages`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -49,9 +52,11 @@ export async function getMessagesForConversation(
   isGroup: boolean,
   token: string
 ): Promise<Message[]> {
-  const res = await fetch("http://localhost:8080/api/messages", {
+  const API_URL =
+    (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080") + "/api";
+  const res = await fetch(`${API_URL}/messages`, {
     headers: { Authorization: `Bearer ${token}` },
-    credentials: "include"
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Erreur lors de la récupération des messages");
   const allMsgs = await res.json();
@@ -59,12 +64,11 @@ export async function getMessagesForConversation(
   if (isGroup) {
     filtered = allMsgs.filter((m: any) => m.recipient === conversationId);
   } else {
-    filtered = allMsgs.filter((m: any) =>
-      (m.sender === currentUserId && m.recipient === conversationId) ||
-      (m.sender === conversationId && m.recipient === currentUserId)
+    filtered = allMsgs.filter(
+      (m: any) =>
+        (m.sender === currentUserId && m.recipient === conversationId) ||
+        (m.sender === conversationId && m.recipient === currentUserId)
     );
   }
   return filtered;
 }
-
-
